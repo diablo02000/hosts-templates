@@ -1,0 +1,47 @@
+{
+  "variables": {
+    "channel": "stable",
+    "version": "current",
+    "checksum_type": "md5",
+    "checksum": "0da9440525e04baa73b36fba46909b13"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "vm_name": "coreos-{{user `channel`}}",
+
+      "iso_checksum": "{{user `checksum`}}",
+      "iso_checksum_type": "{{user `checksum_type`}}",
+      "iso_url": "http://{{user `channel`}}.release.core-os.net/amd64-usr/{{user `version`}}/coreos_production_iso_image.iso",
+
+      "http_directory": "/home/christophe/Git-depot/dockers/packers/coreos/files/",
+
+      "ssh_port": 22,
+      "ssh_username": "core",
+      "ssh_private_key_file": "files/id_vagrant",
+      "ssh_wait_timeout": "10m",
+
+      "guest_os_type": "Linux26_64",
+      "hard_drive_interface": "sata",
+      "disk_size": 40960,
+      "vboxmanage": [
+        [ "modifyvm", "{{.Name}}", "--memory", "1024" ],
+        [ "modifyvm", "{{.Name}}", "--cpus", "1" ]
+      ],
+      "guest_additions_mode": "disable",
+
+      "boot_command": [
+        "sudo -i<enter>",
+        "systemctl stop sshd.socket<enter>",
+	"wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/install.yml<enter>",
+        "coreos-install -d /dev/sda -C {{user `channel`}} -c install.yml<enter>",
+        "reboot<enter>"
+      ],
+      "boot_wait": "30s",
+      "shutdown_command": "sudo -S shutdown -P now",
+
+      "output_directory": "builds/packer-coreos-{{user `channel`}}-{{user `version`}}-virtualbox"
+
+    }
+  ]
+}
