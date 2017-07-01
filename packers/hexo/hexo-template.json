@@ -1,0 +1,38 @@
+{
+  "variables": {
+    "hexo_dir": "/var/hexo/"
+  },
+  "builders":[{
+    "type": "docker",
+    "image": "diablo02000/nodejs:7", 
+    "commit": true,
+    "changes": [
+      "WORKDIR {{ user `hexo_dir`}}",
+      "VOLUME {{ user `hexo_dir`}}",
+      "ENTRYPOINT [\"/opt/docker-entrypoint.sh\"]",
+      "CMD [\"hexo\"]" 
+    ]
+  }],
+  "provisioners":[{
+    "type": "shell",
+    "inline":[ 
+      "apt-get install -y --no-install-recommends git",
+      "npm install hexo-cli -g",
+      "mkdir -p {{ user `hexo_dir`}}"
+    ]
+  },
+  {
+    "destination": "/opt/",
+    "source": "docker-entrypoint.sh",
+    "type": "file"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "hexo:latest"
+      }
+    ]
+  ]
+}
