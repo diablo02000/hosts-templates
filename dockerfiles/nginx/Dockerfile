@@ -19,6 +19,7 @@ ENV fullConfigureFlags="${ligthConfigureFlags} --with-http_addition_module --wit
 # Build nginx-extras version
 ENV extrasConfigureFlags="--with-http_addition_module --with-http_flv_module --with-http_geoip_module=dynamic --with-http_gunzip_module --with-http_gzip_static_module --with-http_image_filter_module=dynamic --with-http_mp4_module --with-http_perl_module=dynamic --with-http_random_index_module --with-http_secure_link_module --with-http_sub_module --with-http_xslt_module=dynamic --with-mail=dynamic --with-mail_ssl_module --with-stream=dynamic --with-stream_ssl_module --with-stream_ssl_preread_module"
 
+
 RUN echo "deb http://ftp.ca.debian.org/debian unstable main" >> /etc/apt/sources.list.d/unstable.list && \
     apt-get update && \
     apt-get install -y --no-install-recommends --no-install-suggests curl libpcre3 libpcre3-dev gcc+ make libssl-dev autoconf libssl-dev libperl-dev libxslt1-dev libgd-dev libgeoip-dev && \
